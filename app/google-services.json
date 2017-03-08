@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "930142996543",
+    "firebase_url": "https://pollingapp-63aea.firebaseio.com",
+    "project_id": "pollingapp-63aea",
+    "storage_bucket": "pollingapp-63aea.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930142996543:android:e514da18d29f4e0c",
+        "android_client_info": {
+          "package_name": "shd.pollingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930142996543-m4cb9ksjssd56353ferbt0dhg4l89k8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKr3cTkdeEa_sNSt4P0CEMxjNi8-ws2ms"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
