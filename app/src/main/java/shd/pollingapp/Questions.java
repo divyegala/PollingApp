@@ -1,5 +1,7 @@
 package shd.pollingapp;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -7,9 +9,13 @@ import java.util.ArrayList;
  */
 
 public class Questions {
+    protected String key;
     protected ArrayList<String> questions = new ArrayList<>();
+    protected ArrayList<String> answers = new ArrayList<>();
+    protected User user;
 
-    protected Questions (ArrayList<String> questions) {
+    protected Questions (String key, ArrayList<String> questions) {
+        this.key = key;
         this.questions = questions;
     }
 }

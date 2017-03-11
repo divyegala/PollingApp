@@ -12,8 +12,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     private Button addUserButton;
     private FirebaseHelper firebaseHelper;
     protected User user;
+    protected ArrayList<Questions> questions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         addUserButton = (Button)findViewById(R.id.add_user);
         user = new User(null, null, null);
 
+        /*
+        HOW TO AUTHENTICATE USER ON BUTTON CLICK--------------------
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,5 +68,39 @@ public class MainActivity extends AppCompatActivity {
                 firebaseHelper.getUserDatabaseReference().addListenerForSingleValueEvent(getPasswordAndRole);
             }
         });
+        */
+
+        /*
+        HOW TO ADD QUESTIONS-------------------
+        ArrayList<String> temp = new ArrayList<>();
+        temp.add("yo?");
+        temp.add("yay?");
+        temp.add("works?");
+        questions = new Questions(temp);
+        firebaseHelper.addQuestions(questions);
+        */
+        /*
+        HOW TO DYNAMICALLY RETRIEVE QUESTIONS-----------------------------
+        questions = new ArrayList<>();
+        ValueEventListener getQuestions = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                HashMap<String, Object> temp = new HashMap<>();
+                temp = (HashMap<String, Object>) dataSnapshot.getValue();
+                for(Map.Entry<String, Object> entry : temp.entrySet()) {
+                    //questions.add(Questions(entry.getKey(), entry.getValue()));
+                    Questions q = new Questions(entry.getKey(),(ArrayList<String>) entry.getValue());
+                    questions.add(q);
+                    System.out.println(q.key + q.questions.get(0));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
+        */
     }
 }

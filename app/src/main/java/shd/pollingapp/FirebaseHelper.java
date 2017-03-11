@@ -18,10 +18,12 @@ import java.util.Map;
 public class FirebaseHelper {
     private DatabaseReference userDatabase;
     private DatabaseReference questionsDatabase;
+    private DatabaseReference questionsCountDatabase;
 
     protected FirebaseHelper () {
         this.userDatabase = FirebaseDatabase.getInstance().getReference("/users");
         this.questionsDatabase = FirebaseDatabase.getInstance().getReference("/questions");
+        this.questionsCountDatabase = FirebaseDatabase.getInstance().getReference("/count");
     }
 
     protected void addUser (User user) {
@@ -31,7 +33,14 @@ public class FirebaseHelper {
         this.userDatabase.child(user.username).setValue(userObj);
     }
 
+    protected void addQuestions (Questions questions) {
+        String key = this.questionsDatabase.push().getKey();
+        this.questionsDatabase.child(key).setValue(questions.questions);
+    }
+
     protected DatabaseReference getUserDatabaseReference() {
         return this.userDatabase;
     }
+
+    protected DatabaseReference getQuestionsDatabaseReference () { return this.questionsDatabase; }
 }
