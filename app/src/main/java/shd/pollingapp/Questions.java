@@ -14,8 +14,7 @@ public class Questions {
     protected ArrayList<String> answers = new ArrayList<>();
     protected User user;
 
-    protected Questions (String key, ArrayList<String> questions) {
-        this.key = key;
+    protected Questions (ArrayList<String> questions) {
         this.questions = questions;
     }
 }
