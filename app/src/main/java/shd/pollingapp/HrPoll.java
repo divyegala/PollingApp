@@ -1,5 +1,6 @@
 package shd.pollingapp;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,12 +22,13 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class PollQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
+    ArrayList<Questions> questions;
     ArrayList<String> questionList ;
-    ArrayList<String> answerList ;
 
     FirebaseHelper firebaseHelper;
     ListView listView;
@@ -37,11 +39,9 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.poll_questions);
+        setContentView(R.layout.hr_add_poll);
         Intent intent = getIntent();
-        final Questions currentQuestion = (Questions)intent.getSerializableExtra("Question");
-        question_current=currentQuestion;
-        System.out.print("Key :"+currentQuestion.key);
+
         adapter = new QuestionCustomAdapter();
 
         listView = (ListView) findViewById(R.id.mobile_list);
@@ -62,19 +62,18 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
         //HOW TO DYNAMICALLY RETRIEVE QUESTIONS-----------------------------
 
         firebaseHelper= new FirebaseHelper();
-        questionList = new ArrayList<>();
         ValueEventListener getQuestions = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 HashMap<String, Object> temp = new HashMap<>();
                 temp = (HashMap<String, Object>) dataSnapshot.getValue();
-                //for(Map.Entry<String, Object> entry : temp.entrySet()) {
+                for(Map.Entry<String, Object> entry : temp.entrySet()) {
                     //questions.add(Questions(entry.getKey(), entry.getValue()));
-                    for(int i=0;i<currentQuestion.questions.size();i++)
-                    questionList.add(currentQuestion.questions.get(i));
-                    System.out.println(questionList.get(0));
-                //}
-
+                    Questions q = new Questions((ArrayList<String>) entry.getValue());
+                    q.key = entry.getKey();
+                    questions.add(q);
+                    System.out.println(q.key + q.questions.get(0));
+                }
                 listView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
@@ -86,46 +85,15 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
         };
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
         final Intent goback=new Intent(this, EmployeePoll.class);
-        final Button button = (Button) findViewById(R.id.button2);
+        final Button button = (Button) findViewById(R.id.btn_create_poll);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                View view;
-                int count=0;
-                for(int i=0;i<adapter.getCount();i++) {
+                DialogFragment dialogFragment=new DialogFrag();
+                dialogFragment.show(getFragmentManager(),"Dialog");
 
-                    view = getViewByPosition(i, listView);
-                    //System.out.println(view);
-                    rg = (RadioGroup) view.findViewById(R.id.rg_list);
-                    //System.out.println(rg);
-                    int selectedId = rg.getCheckedRadioButtonId();
-                    radioAnswerButton = (RadioButton) view.findViewById(selectedId);
-                    //System.out.println(selectedId);
-                    TextView textView = (TextView) view.findViewById(R.id.tv_li_question_item);
-                    //System.out.println(textView);
-                    //System.out.println(textView.getText());
-                    //Text of that id
-                    if (selectedId == R.id.rb_yes) {
-                        System.out.println("Yes");
-                        question_current.answers.add(i, "Yes");
-                        count++;
 
-                    } else if (selectedId == R.id.rb_no)  {
-                        System.out.println("No");
-                        question_current.answers.add(i, "No");
-                        count++;
-                    }
-                }
-                if(count<adapter.getCount()){
-                    Toast.makeText(PollQuestions.this, "Please answer all questions!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                        question_current.completeStatus=true;
-                        Toast.makeText(PollQuestions.this, "Thank you for participating!", Toast.LENGTH_SHORT).show();
-                        startActivity(goback);
-                }
-
-                }
+            }
 
 
         });
@@ -134,17 +102,7 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
     }
 
 
-    public View getViewByPosition(int pos,ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
-    }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "YES", Toast.LENGTH_SHORT).show();
@@ -152,7 +110,7 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-   // @Override
+    // @Override
    /* public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         RadioGroup rg= (RadioGroup) findViewById(R.id.rg_list);
         Toast.makeText(PollQuestions.this, "YES", Toast.LENGTH_SHORT).show();
@@ -182,12 +140,12 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
 
         @Override
         public int getCount() {
-            return questionList.size();
+            return questions.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return questionList.get(position);
+            return questions.get(position);
         }
 
         @Override
@@ -200,11 +158,11 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
             if(convertView == null)
             {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                convertView = layoutInflater.inflate(R.layout.poll_question_item,null);
+                convertView = layoutInflater.inflate(R.layout.list_item_question,null);
             }
-            TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question_item);
-            String question = questionList.get(position);
-            questionView.setText(question);
+            TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question);
+            Questions question = questions.get(position);
+            questionView.setText(question.key);
 
             return convertView;
         }

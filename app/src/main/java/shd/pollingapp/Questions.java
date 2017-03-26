@@ -13,6 +13,7 @@ public class Questions implements Serializable{
 
 
     protected String key;
+    protected String name;
     protected ArrayList<String> questions = new ArrayList<>();
     protected ArrayList<String> answers = new ArrayList<>();
     protected User user;

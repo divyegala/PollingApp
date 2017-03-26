@@ -1,5 +1,6 @@
 package shd.pollingapp;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,26 +23,30 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class PollQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class AddQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
     ArrayList<String> questionList ;
     ArrayList<String> answerList ;
-
+    Questions newQuestion = new Questions(questionList);
     FirebaseHelper firebaseHelper;
     ListView listView;
     QuestionCustomAdapter adapter;
-    RadioGroup rg;
-    RadioButton radioAnswerButton;
     static Questions question_current;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.poll_questions);
+        setContentView(R.layout.add_questions);
         Intent intent = getIntent();
-        final Questions currentQuestion = (Questions)intent.getSerializableExtra("Question");
-        question_current=currentQuestion;
-        System.out.print("Key :"+currentQuestion.key);
+        if(intent.hasExtra("name")){
+            String name=intent.getStringExtra("name");
+            newQuestion.name=name;
+        }
+        if(intent.hasExtra("question")){
+            String newquestion=intent.getStringExtra("question");
+            newQuestion.questions.add(newquestion);
+        }
+
         adapter = new QuestionCustomAdapter();
 
         listView = (ListView) findViewById(R.id.mobile_list);
@@ -69,10 +74,10 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
                 HashMap<String, Object> temp = new HashMap<>();
                 temp = (HashMap<String, Object>) dataSnapshot.getValue();
                 //for(Map.Entry<String, Object> entry : temp.entrySet()) {
-                    //questions.add(Questions(entry.getKey(), entry.getValue()));
-                    for(int i=0;i<currentQuestion.questions.size();i++)
-                    questionList.add(currentQuestion.questions.get(i));
-                    System.out.println(questionList.get(0));
+                //questions.add(Questions(entry.getKey(), entry.getValue()));
+                for(int i=0;i<newQuestion.questions.size();i++)
+                    questionList.add(newQuestion.questions.get(i));
+                System.out.println(questionList.get(0));
                 //}
 
                 listView.setAdapter(adapter);
@@ -90,42 +95,11 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
-                View view;
-                int count=0;
-                for(int i=0;i<adapter.getCount();i++) {
+                DialogFragment dialogFragment=new DialogFrag();
+                dialogFragment.show(getFragmentManager(),"Dialog");
 
-                    view = getViewByPosition(i, listView);
-                    //System.out.println(view);
-                    rg = (RadioGroup) view.findViewById(R.id.rg_list);
-                    //System.out.println(rg);
-                    int selectedId = rg.getCheckedRadioButtonId();
-                    radioAnswerButton = (RadioButton) view.findViewById(selectedId);
-                    //System.out.println(selectedId);
-                    TextView textView = (TextView) view.findViewById(R.id.tv_li_question_item);
-                    //System.out.println(textView);
-                    //System.out.println(textView.getText());
-                    //Text of that id
-                    if (selectedId == R.id.rb_yes) {
-                        System.out.println("Yes");
-                        question_current.answers.add(i, "Yes");
-                        count++;
 
-                    } else if (selectedId == R.id.rb_no)  {
-                        System.out.println("No");
-                        question_current.answers.add(i, "No");
-                        count++;
-                    }
-                }
-                if(count<adapter.getCount()){
-                    Toast.makeText(PollQuestions.this, "Please answer all questions!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                        question_current.completeStatus=true;
-                        Toast.makeText(PollQuestions.this, "Thank you for participating!", Toast.LENGTH_SHORT).show();
-                        startActivity(goback);
-                }
-
-                }
+            }
 
 
         });
@@ -133,18 +107,6 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-
-    public View getViewByPosition(int pos,ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
-    }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "YES", Toast.LENGTH_SHORT).show();
@@ -152,7 +114,7 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
 
     }
 
-   // @Override
+    // @Override
    /* public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         RadioGroup rg= (RadioGroup) findViewById(R.id.rg_list);
         Toast.makeText(PollQuestions.this, "YES", Toast.LENGTH_SHORT).show();
