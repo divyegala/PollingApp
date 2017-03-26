@@ -120,9 +120,11 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
                     Toast.makeText(PollQuestions.this, "Please answer all questions!", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                        question_current.completeStatus=true;
-                        Toast.makeText(PollQuestions.this, "Thank you for participating!", Toast.LENGTH_SHORT).show();
-                        startActivity(goback);
+                    question_current.completeStatus=true;
+                    Toast.makeText(PollQuestions.this, "Thank you for participating!", Toast.LENGTH_SHORT).show();
+                    User user = new User("divyegala", "d", "EMP");
+                    firebaseHelper.addUserAnswers(user, question_current);
+                    startActivity(goback);
                 }
 
                 }

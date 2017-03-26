@@ -24,7 +24,7 @@ import java.util.Map;
 public class EmployeePoll extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
-   ArrayList<Questions> questions ;
+    ArrayList<Questions> questions ;
     FirebaseHelper firebaseHelper;
     ListView listView;
     QuestionCustomAdapter adapter;
@@ -58,11 +58,14 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
                 HashMap<String, Object> temp = new HashMap<>();
                 temp = (HashMap<String, Object>) dataSnapshot.getValue();
                 for(Map.Entry<String, Object> entry : temp.entrySet()) {
+                    HashMap<String, Object> temp1 = (HashMap<String, Object>) entry.getValue();
                     //questions.add(Questions(entry.getKey(), entry.getValue()));
-                    Questions q = new Questions((ArrayList<String>) entry.getValue());
+                    Questions q = new Questions((ArrayList<String>) temp1.get("questions"));
                     q.key = entry.getKey();
-                    questions.add(q);
-                    System.out.println(q.key + q.questions.get(0));
+                    if (!temp1.containsKey("divyegala")) {
+                        questions.add(q);
+                        System.out.println(q.key + q.questions.get(0));
+                    }
                 }
                 listView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -76,8 +79,34 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
 
 
+        /*
+        ValueEventListener getAnsweredQuestions = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<Questions> temp = questions;
+                for (int i = 0; i < temp.size(); i++) {
+                    String k = temp.get(i).key;
+                    if (dataSnapshot.child(k).hasChild("divyegala")) {
+                        System.out.println(k + "     hi");
+                        for (int j = 0; j < questions.size(); j++) {
+                            if (k.equals(questions.get(j).key)) {
+                                questions.remove(j);
+                                break;
+                            }
+                        }
+                    }
+                }
+                listView.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        };
+        firebaseHelper.getAnswersDatabaseReference().addValueEventListener(getAnsweredQuestions);
+        */
     }
 
     @Override

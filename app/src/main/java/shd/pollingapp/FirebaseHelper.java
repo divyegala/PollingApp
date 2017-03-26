@@ -8,6 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,11 +20,15 @@ public class FirebaseHelper {
     private DatabaseReference userDatabase;
     private DatabaseReference questionsDatabase;
     private DatabaseReference questionsCountDatabase;
+    private DatabaseReference questionsAnswersDatabase;
+    private DatabaseReference rootDatabase;
 
     protected FirebaseHelper () {
         this.userDatabase = FirebaseDatabase.getInstance().getReference("/users");
         this.questionsDatabase = FirebaseDatabase.getInstance().getReference("/questions");
         this.questionsCountDatabase = FirebaseDatabase.getInstance().getReference("/count");
+        this.questionsAnswersDatabase = FirebaseDatabase.getInstance().getReference("/answers");
+        this.rootDatabase = FirebaseDatabase.getInstance().getReference("/");
     }
 
     protected void addUser (User user) {
@@ -35,7 +40,13 @@ public class FirebaseHelper {
 
     protected void addQuestions (Questions questions) {
         String key = this.questionsDatabase.push().getKey();
-        this.questionsDatabase.child(key).setValue(questions.questions);
+        this.questionsDatabase.child(key).child("questions").setValue(questions.questions);
+    }
+
+    protected void addUserAnswers(User user, Questions question) {
+        HashMap<String, ArrayList> ansObj = new HashMap<>();
+        ansObj.put(user.username, question.answers);
+        this.questionsDatabase.child(question.key).child(user.username).setValue(question.answers);
     }
 
     protected DatabaseReference getUserDatabaseReference() {
@@ -43,4 +54,8 @@ public class FirebaseHelper {
     }
 
     protected DatabaseReference getQuestionsDatabaseReference () { return this.questionsDatabase; }
+
+    protected DatabaseReference getAnswersDatabaseReference () { return this.questionsAnswersDatabase; }
+
+    protected DatabaseReference getRootReference () { return this.rootDatabase; }
 }
