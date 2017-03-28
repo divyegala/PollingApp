@@ -26,9 +26,9 @@ import java.util.HashMap;
 public class AddQuestions extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
 
-    ArrayList<String> questionList ;
+    static ArrayList<String> questionList =new ArrayList<>();
     ArrayList<String> answerList ;
-    Questions newQuestion = new Questions(questionList);
+    static Questions newQuestion = new Questions(questionList);
     FirebaseHelper firebaseHelper;
     ListView listView;
     QuestionCustomAdapter adapter;
@@ -38,13 +38,17 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_questions);
         Intent intent = getIntent();
+
+
         if(intent.hasExtra("name")){
             String name=intent.getStringExtra("name");
             newQuestion.name=name;
+            System.out.println("Done :"+name);
         }
         if(intent.hasExtra("question")){
             String newquestion=intent.getStringExtra("question");
             newQuestion.questions.add(newquestion);
+            System.out.println(newquestion);
         }
 
         adapter = new QuestionCustomAdapter();
@@ -77,7 +81,7 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
                 //questions.add(Questions(entry.getKey(), entry.getValue()));
                 for(int i=0;i<newQuestion.questions.size();i++)
                     questionList.add(newQuestion.questions.get(i));
-                System.out.println(questionList.get(0));
+               // System.out.println(questionList.get(0));
                 //}
 
                 listView.setAdapter(adapter);
@@ -91,7 +95,7 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
         };
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
         final Intent goback=new Intent(this, EmployeePoll.class);
-        final Button button = (Button) findViewById(R.id.button2);
+        final Button button = (Button) findViewById(R.id.btn_add_question);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
@@ -105,6 +109,19 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
         });
 
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        // code here to show dialog
+        firebaseHelper.addQuestions(newQuestion);
+        questionList = new ArrayList<>();
+        newQuestion=new Questions(questionList);
+        super.onBackPressed();
+        Intent intent=new Intent(this,HrPoll.class);
+        startActivity(intent);
+        // optional depending on your needs
     }
 
     @Override
@@ -162,14 +179,13 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
             if(convertView == null)
             {
                 LayoutInflater layoutInflater = getLayoutInflater();
-                convertView = layoutInflater.inflate(R.layout.poll_question_item,null);
+                convertView = layoutInflater.inflate(R.layout.list_item_question,null);
             }
-            TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question_item);
+            TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question);
             String question = questionList.get(position);
             questionView.setText(question);
 
             return convertView;
         }
     }
-
 }

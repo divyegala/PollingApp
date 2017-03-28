@@ -28,14 +28,12 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
 
 
     ArrayList<Questions> questions;
-    ArrayList<String> questionList ;
+   // ArrayList<String> questionList ;
 
     FirebaseHelper firebaseHelper;
     ListView listView;
     QuestionCustomAdapter adapter;
-    RadioGroup rg;
-    RadioButton radioAnswerButton;
-    static Questions question_current;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +58,7 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
 
 
         //HOW TO DYNAMICALLY RETRIEVE QUESTIONS-----------------------------
-
+        questions = new ArrayList<>();
         firebaseHelper= new FirebaseHelper();
         ValueEventListener getQuestions = new ValueEventListener() {
             @Override
@@ -68,8 +66,9 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
                 HashMap<String, Object> temp = new HashMap<>();
                 temp = (HashMap<String, Object>) dataSnapshot.getValue();
                 for(Map.Entry<String, Object> entry : temp.entrySet()) {
+                    HashMap<String, Object> temp1 = (HashMap<String, Object>) entry.getValue();
                     //questions.add(Questions(entry.getKey(), entry.getValue()));
-                    Questions q = new Questions((ArrayList<String>) entry.getValue());
+                    Questions q = new Questions((ArrayList<String>) temp1.get("questions"));
                     q.key = entry.getKey();
                     questions.add(q);
                     System.out.println(q.key + q.questions.get(0));

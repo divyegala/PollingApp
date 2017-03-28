@@ -30,7 +30,18 @@ public class DialogFrag extends DialogFragment {
                         Intent intent = new Intent(getActivity(), AddQuestions.class);
                         EditText name= (EditText) view.findViewById(R.id.newpollname);
                         String qname = name.getText().toString();
-                        intent.putExtra("name",qname);
+                        System.out.println("Dia :"+qname);
+
+                        if(getActivity().getClass().toString().equals("class shd.pollingapp.HrPoll")) {
+                            intent.putExtra("name", qname);
+                            System.out.println(qname+"   "+getActivity().getClass().toString());
+
+                        }
+                        else if(getActivity().getClass().toString().equals("class shd.pollingapp.AddQuestions"))
+                        {
+                            intent.putExtra("question", qname);
+                            System.out.println(qname+"   "+getActivity().getClass().toString());
+                        }
                         startActivity(intent);
                     }
                 })

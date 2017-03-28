@@ -1,5 +1,6 @@
 package shd.pollingapp;
 
+import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,9 @@ import android.widget.EditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private Button addUserButton;
     private FirebaseHelper firebaseHelper;
-    protected User user;
+    protected static User user;
     protected ArrayList<Questions> questions;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,26 +40,39 @@ public class MainActivity extends AppCompatActivity {
         addUserButton = (Button)findViewById(R.id.add_user);
         user = new User(null, null, null);
 
-        /*
-        HOW TO AUTHENTICATE USER ON BUTTON CLICK--------------------
+        ShimmerTextView myShimmerTextView= (ShimmerTextView) findViewById(R.id.shimmer_tv);
+        myShimmerTextView.setTypeface(EasyFonts.robotoThin(this));
+        Shimmer shimmer = new Shimmer();
+        shimmer.start(myShimmerTextView);
+        //HOW TO AUTHENTICATE USER ON BUTTON CLICK--------------------
         addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 user = new User(null, null, null);
+                final String user_name=username.getText().toString();
+                final String pass_word=password.getText().toString();
+
                 ValueEventListener getPasswordAndRole = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Map<String, Object> temp = (HashMap<String, Object>) dataSnapshot.child("sidbag").getValue();
-                        if (!temp.get("password").equals("sid")) {
+                        Map<String, Object> temp = (HashMap<String, Object>) dataSnapshot.child(user_name).getValue();
+                        if (!temp.get("password").equals(pass_word)) {
                             user.setAuthenticationStatus(0);
-                        } else if (temp.get("password").equals("sid") && temp.get("role").equals("HR")) {
-                            user.username = "sidbag";
+                        }
+                        else if (temp.get("password").equals(pass_word) && temp.get("role").equals("HR")) {
+                            user.username = user_name;
                             user.setAuthenticationStatus(1);
                             user.role = "HR";
-                        } else {
-                            user.username = "sidbag";
+                            Intent intent=new Intent(getApplicationContext(),HrPoll.class);
+                            startActivity(intent);
+                        }
+                        else {
+                            user.username = user_name;
+//                            System.out.println
                             user.setAuthenticationStatus(2);
                             user.role = "EMP";
+                            Intent intent=new Intent(getApplicationContext(),EmployeePoll.class);
+                            startActivity(intent);
                             System.out.println("3");
                         }
                     }
@@ -68,39 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 firebaseHelper.getUserDatabaseReference().addListenerForSingleValueEvent(getPasswordAndRole);
             }
         });
-        */
 
-        /*
-        HOW TO ADD QUESTIONS-------------------
-        ArrayList<String> temp = new ArrayList<>();
-        temp.add("yo?");
-        temp.add("yay?");
-        temp.add("works?");
-        questions = new Questions(temp);
-        firebaseHelper.addQuestions(questions);
-        */
-        /*
-        HOW TO DYNAMICALLY RETRIEVE QUESTIONS-----------------------------
-        questions = new ArrayList<>();
-        ValueEventListener getQuestions = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                HashMap<String, Object> temp = new HashMap<>();
-                temp = (HashMap<String, Object>) dataSnapshot.getValue();
-                for(Map.Entry<String, Object> entry : temp.entrySet()) {
-                    //questions.add(Questions(entry.getKey(), entry.getValue()));
-                    Questions q = new Questions(entry.getKey(),(ArrayList<String>) entry.getValue());
-                    questions.add(q);
-                    System.out.println(q.key + q.questions.get(0));
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
-        */
     }
 }

@@ -122,8 +122,7 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
                 else{
                     question_current.completeStatus=true;
                     Toast.makeText(PollQuestions.this, "Thank you for participating!", Toast.LENGTH_SHORT).show();
-                    User user = new User("divyegala", "d", "EMP");
-                    firebaseHelper.addUserAnswers(user, question_current);
+                    firebaseHelper.addUserAnswers(MainActivity.user, question_current);
                     startActivity(goback);
                 }
 

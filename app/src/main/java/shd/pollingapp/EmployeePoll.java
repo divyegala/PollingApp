@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -62,7 +63,7 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
                     //questions.add(Questions(entry.getKey(), entry.getValue()));
                     Questions q = new Questions((ArrayList<String>) temp1.get("questions"));
                     q.key = entry.getKey();
-                    if (!temp1.containsKey("divyegala")) {
+                    if (!temp1.containsKey(MainActivity.user.username)) {
                         questions.add(q);
                         System.out.println(q.key + q.questions.get(0));
                     }
@@ -145,10 +146,12 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
         }
         TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question);
         Questions question = questions.get(position);
+        questionView.setTypeface(EasyFonts.robotoMedium(getApplicationContext()));
         questionView.setText(question.key);
 
         return convertView;
     }
 }
+
 
 }

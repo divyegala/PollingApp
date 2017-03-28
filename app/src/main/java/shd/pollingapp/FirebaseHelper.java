@@ -41,6 +41,7 @@ public class FirebaseHelper {
     protected void addQuestions (Questions questions) {
         String key = this.questionsDatabase.push().getKey();
         this.questionsDatabase.child(key).child("questions").setValue(questions.questions);
+        this.questionsDatabase.child(key).child("name").setValue(questions.name);
     }
 
     protected void addUserAnswers(User user, Questions question) {

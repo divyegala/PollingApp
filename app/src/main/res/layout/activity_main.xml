@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="shd.pollingapp.MainActivity">
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/shimmer_tv"
+        android:text="QuickPoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="#444"
+        android:layout_marginTop="100dp"
+        android:textSize="50sp"
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"
+        android:layout_marginEnd="74dp"
+        android:layout_marginBottom="182dp"
+        />
 
     <EditText
         android:id="@+id/username"
@@ -13,8 +27,8 @@
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
-        tools:layout_editor_absoluteX="84dp"
-        tools:layout_editor_absoluteY="174dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="300dp" />
 
     <EditText
         android:id="@+id/password"
@@ -23,14 +37,18 @@
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        tools:layout_editor_absoluteX="84dp"
-        tools:layout_editor_absoluteY="233dp" />
+        android:layout_below="@+id/username"
+        android:layout_alignStart="@+id/username"
+        android:layout_marginTop="22dp" />
 
     <Button
         android:id="@+id/add_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add User"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="307dp" />
-</LinearLayout>
+        android:text="Login"
+        android:layout_below="@+id/password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
+
+</RelativeLayout>
