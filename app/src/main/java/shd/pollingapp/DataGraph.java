@@ -1,5 +1,6 @@
 package shd.pollingapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.RelativeLayout;
@@ -32,6 +33,10 @@ public class DataGraph extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_graph);
+
+        Intent intent= getIntent();
+        final String key=intent.getStringExtra("key");
+
         barChart = (BarChart) findViewById(R.id.chart);
         firebaseHelper = new FirebaseHelper();
         ValueEventListener getAnswerData = new ValueEventListener() {
@@ -42,7 +47,7 @@ public class DataGraph extends AppCompatActivity {
                 totalVotes = 0;
                 x_axis = 0;
                 HashMap<String, Object> questionsData = (HashMap<String, Object>) dataSnapshot.getValue();
-                HashMap<String, Object> questionData =  (HashMap<String, Object>) questionsData.get("-KgDYZMCpPwHiZtKSXZK");
+                HashMap<String, Object> questionData =  (HashMap<String, Object>) questionsData.get(key);
                 ArrayList<String> temp = (ArrayList<String>) questionData.get("questions");
                 for (int i = 0; i < temp.size(); i++) {
                     ansCount.add(0);

@@ -3,6 +3,7 @@ package shd.pollingapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,15 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
 
         listView = (ListView) findViewById(R.id.mobile_list);
         listView.setOnItemClickListener(this);
+        TextView tv= (TextView) findViewById(R.id.title_action);
+        tv.setTypeface(EasyFonts.robotoThin(this));
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+       /* int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView yourTextView = (TextView) findViewById(titleId);
+        yourTextView.setTypeface(EasyFonts.robotoThin(this));*/
 
         /*
         HOW TO ADD QUESTIONS-------------------
@@ -63,6 +73,7 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
                     //questions.add(Questions(entry.getKey(), entry.getValue()));
                     Questions q = new Questions((ArrayList<String>) temp1.get("questions"));
                     q.key = entry.getKey();
+                    q.name=temp1.get("name").toString();
                     if (!temp1.containsKey(MainActivity.user.username)) {
                         questions.add(q);
                         System.out.println(q.key + q.questions.get(0));
@@ -71,6 +82,7 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
                 listView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -119,6 +131,14 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
      //   questions.remove(position);
     }
 
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
+        // optional depending on your needs
+    }
+
 
     class QuestionCustomAdapter extends BaseAdapter{
 
@@ -147,7 +167,7 @@ public class EmployeePoll extends AppCompatActivity implements AdapterView.OnIte
         TextView questionView = (TextView) convertView.findViewById(R.id.tv_li_question);
         Questions question = questions.get(position);
         questionView.setTypeface(EasyFonts.robotoMedium(getApplicationContext()));
-        questionView.setText(question.key);
+        questionView.setText(question.name);
 
         return convertView;
     }

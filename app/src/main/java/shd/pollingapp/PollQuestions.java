@@ -3,12 +3,14 @@ package shd.pollingapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +49,11 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
 
         listView = (ListView) findViewById(R.id.mobile_list);
         listView.setOnItemClickListener(this);
+        TextView tv= (TextView) findViewById(R.id.title_action);
+        tv.setTypeface(EasyFonts.robotoThin(this));
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 /*
 
         HOW TO ADD QUESTIONS-------------------
@@ -86,34 +94,42 @@ public class PollQuestions extends AppCompatActivity implements AdapterView.OnIt
         };
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
         final Intent goback=new Intent(this, EmployeePoll.class);
-        final Button button = (Button) findViewById(R.id.button2);
+        ImageButton button= (ImageButton) findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 View view;
                 int count=0;
+                System.out.println("Adapter count: " + adapter.getCount());//ACBhiiae ho raha
+                //call kar
                 for(int i=0;i<adapter.getCount();i++) {
-
+                    System.out.println("Loop " + i);
                     view = getViewByPosition(i, listView);
                     //System.out.println(view);
                     rg = (RadioGroup) view.findViewById(R.id.rg_list);
                     //System.out.println(rg);
                     int selectedId = rg.getCheckedRadioButtonId();
+                    System.out.println("sel "+selectedId);
                     radioAnswerButton = (RadioButton) view.findViewById(selectedId);
                     //System.out.println(selectedId);
                     TextView textView = (TextView) view.findViewById(R.id.tv_li_question_item);
                     //System.out.println(textView);
-                    //System.out.println(textView.getText());
+                    System.out.println(textView.getText());
                     //Text of that id
-                    if (selectedId == R.id.rb_yes) {
+                    if (selectedId == R.id.rb_yes ) {//idhar || karke kyu nahi daala Jo samajh raha tha tabhi
+                        //run kar aur 3 daal
+                        //hua toh ye dekh
                         System.out.println("Yes");
-                        question_current.answers.add(i, "Yes");
+                        question_current.answers.add("Yes");
                         count++;
 
                     } else if (selectedId == R.id.rb_no)  {
                         System.out.println("No");
-                        question_current.answers.add(i, "No");
+                        question_current.answers.add("No");
+                        //tune beech ka question skip kiya? Abhi? haan Nahi... chalake dekh
                         count++;
+                        //ab try kar PAR kyu?sure nahi tukka hai ...But ye 1 aur 2 questions ke liye ekdum barabar chal raha
+                        //Answer karne ke time aaya? Buton subm...HAA
                     }
                 }
                 if(count<adapter.getCount()){

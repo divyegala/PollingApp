@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,6 +57,8 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
 
         listView = (ListView) findViewById(R.id.mobile_list);
         listView.setOnItemClickListener(this);
+        TextView tv= (TextView) findViewById(R.id.title_action);
+        tv.setTypeface(EasyFonts.robotoThin(this));
 /*
 
         HOW TO ADD QUESTIONS-------------------
@@ -95,8 +99,8 @@ public class AddQuestions extends AppCompatActivity implements AdapterView.OnIte
         };
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
         final Intent goback=new Intent(this, EmployeePoll.class);
-        final Button button = (Button) findViewById(R.id.btn_add_question);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageButton imageButton= (ImageButton) findViewById(R.id.add_poll_action);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 DialogFragment dialogFragment=new DialogFrag();

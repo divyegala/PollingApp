@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.vstechlab.easyfonts.EasyFonts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +46,8 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
 
         listView = (ListView) findViewById(R.id.mobile_list);
         listView.setOnItemClickListener(this);
+        TextView tv= (TextView) findViewById(R.id.title_action);
+        tv.setTypeface(EasyFonts.robotoThin(this));
 /*
 
         HOW TO ADD QUESTIONS-------------------
@@ -84,8 +88,8 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
         };
         firebaseHelper.getQuestionsDatabaseReference().addValueEventListener(getQuestions);
         final Intent goback=new Intent(this, EmployeePoll.class);
-        final Button button = (Button) findViewById(R.id.btn_create_poll);
-        button.setOnClickListener(new View.OnClickListener() {
+        ImageButton imageButton= (ImageButton) findViewById(R.id.add_poll_action);
+        imageButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Perform action on click
                 DialogFragment dialogFragment=new DialogFrag();
@@ -100,12 +104,21 @@ public class HrPoll extends AppCompatActivity implements AdapterView.OnItemClick
 
     }
 
-
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent intent=new Intent(this,MainActivity.class);
+        startActivity(intent);
+        // optional depending on your needs
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Toast.makeText(this, "YES", Toast.LENGTH_SHORT).show();
         System.out.print("YESSSYS");
+        Intent intent=new Intent(this,DataGraph.class);
+        intent.putExtra("key",questions.get(position).key);
+        startActivity(intent);
 
     }
 
