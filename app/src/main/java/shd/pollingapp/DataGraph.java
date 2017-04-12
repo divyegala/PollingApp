@@ -42,7 +42,7 @@ public class DataGraph extends AppCompatActivity {
                 totalVotes = 0;
                 x_axis = 0;
                 HashMap<String, Object> questionsData = (HashMap<String, Object>) dataSnapshot.getValue();
-                HashMap<String, Object> questionData =  (HashMap<String, Object>) questionsData.get("-KgDYZMCpPwHiZtKSXZK");
+                HashMap<String, Object> questionData =  (HashMap<String, Object>) questionsData.get("-KhT-APrhPVGm2QTmevm");
                 ArrayList<String> temp = (ArrayList<String>) questionData.get("questions");
                 for (int i = 0; i < temp.size(); i++) {
                     ansCount.add(0);
@@ -60,14 +60,14 @@ public class DataGraph extends AppCompatActivity {
                                 ansCount.remove(i);
                                 ansCount.add(i, temp2);
                             }
-                            totalVotes++;
                         }
+                        totalVotes++;
                     }
                 }
-//                System.out.println("total count" + totalVotes);
-//                System.out.println("ansCount size" + ansCount.size());
+                System.out.println("total count" + totalVotes);
+                System.out.println("ansCount size" + ansCount.size());
                 for (int i = 0;i < ansCount.size(); i++) {
-//                    System.out.println(ansCount.get(i));
+                    System.out.println(ansCount.get(i));
                     ArrayList<BarEntry> barEntries = new ArrayList<>();
                     barEntries.add(new BarEntry(x_axis, ansCount.get(i)));
                     x_axis+= 2;
